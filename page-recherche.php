@@ -8,12 +8,14 @@ Template Name: fmes2021-recherche
 // $fargs
 
 define("CS_DIR", 'custom-search');
-require_once(CS_DIR .'\class\term-child.php');
+require_once(CS_DIR . '\class\term-child.php');
 
-function cs_get_terms($cs_tax){
+function cs_get_terms($cs_tax, $plus)
+{
     return get_terms([
         'taxonomy' => $cs_tax,
-        'hide_empty' => 'false'
+        'hide_empty' => 'false',
+        'parent' => $plus,
         // 'parent' => 0, seulement les termes de 1er rang
     ]);
 }
@@ -24,22 +26,30 @@ $is_searched = count($_GET);
 
 // Recuperation des termes de chaque taxonomie
 
-$supports = cs_get_terms('support');
-$langues = cs_get_terms('langue');
-$thematiques = cs_get_terms('thematique');
+$supports = cs_get_terms('support', 0);
+$langues = cs_get_terms('langue', 0);
+$thematiques_parent = cs_get_terms('thematique', 0);
 
+// +++++
 
+$thematiques = [];
+foreach ($thematiques_parent as $tp) :
 
-
-$ttes = [];
-foreach ($thematiques as $tm) :
-    if ($tm->parent == 0) :
-        // $ttes[]= new TermEnfant($tm);
-        $ttes[$tm->term_id] = new TermChild($tm);
-    elseif (isset($ttes[$tm->parent])) :
-        $ttes[$tm->parent]->addChild($tm);
+    if ($tp->parent == 0) :
+        $thematiques[$tp->term_id] = new TermChild($tp);
+        $cs_childs_ids = get_term_children($tp->term_id, 'thematique');
+        if (count($cs_childs_ids)) :
+            
+            foreach ($cs_childs_ids as $cs_child_id) :
+                
+                $cs_childs= get_term_by('term_id', $cs_child_id, 'thematique');
+                $thematiques[$cs_childs->parent]->addChild($cs_childs);
+            endforeach;
+        endif;
     endif;
 endforeach;
+
+
 
 // Recuperation des post_formats
 $formats = array(
@@ -66,7 +76,7 @@ $formats = array(
 <div class="container m-2">
 
 
-    <?php //testing($ttes); 
+    <?php //testing($thematiques); 
     ?>
 
     <form action="<?= esc_url(home_url('/fmes2021-page-recherche/')); ?>">
@@ -78,20 +88,20 @@ $formats = array(
 
         <div class="osi-group">
             <!-- name == date  !!! format splité ou tableau-->
-            <?php get_template_part(CS_DIR .'/parts/form-date', 'date', []); ?>
+            <?php get_template_part(CS_DIR . '/parts/form-date', 'date', []); ?>
 
             <!-- name == langue -->
-            <?php get_template_part(CS_DIR .'/parts/form-langue', 'langue', ['terms' => $langues]); ?>
+            <?php get_template_part(CS_DIR . '/parts/form-langue', 'langue', ['terms' => $langues]); ?>
 
             <!-- name == support -->
-            <?php get_template_part(CS_DIR .'/parts/form-support', 'suport', ['terms' => $supports]); ?>
+            <?php get_template_part(CS_DIR . '/parts/form-support', 'suport', ['terms' => $supports]); ?>
         </div>
 
         <!-- name == format -->
         <?php //get_template_part(CS_DIR .'/parts/form-format','format', ['terms'=> $formats]); 
         ?>
 
-        <?php get_template_part(CS_DIR .'/parts/form-thematique', 'thematique', ['terms' =>  $ttes]); ?>
+        <?php get_template_part(CS_DIR . '/parts/form-thematique', 'thematique', ['terms' =>  $thematiques]); ?>
 
         <a href="<?= home_url('/fmes2021-page-recherche') ?>">Réinitialiser la recherche</a>
         <br>
@@ -208,7 +218,7 @@ if ($is_searched) :
     // $format = has_post_format($format, $post_id);
 
     // test des posts resultats
-    ?>
+?>
     <!-- <pre> -->
     <?php //print_r($query); 
     ?>
