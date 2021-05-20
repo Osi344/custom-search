@@ -28,6 +28,7 @@ $is_searched = count($_GET);
 
 $supports = cs_get_terms('support', 0);
 $langues = cs_get_terms('langue', 0);
+$auteurs = cs_get_terms('auteurs', 0);
 $thematiques_parent = cs_get_terms('thematique', 0);
 
 // +++++
@@ -94,7 +95,10 @@ $formats = array(
             <?php get_template_part(CS_DIR . '/parts/form-langue', 'langue', ['terms' => $langues]); ?>
 
             <!-- name == support -->
-            <?php get_template_part(CS_DIR . '/parts/form-support', 'suport', ['terms' => $supports]); ?>
+            <?php get_template_part(CS_DIR . '/parts/form-support', 'support', ['terms' => $supports]); ?>
+
+            <!-- name == auteur -->
+            <?php get_template_part(CS_DIR . '/parts/form-auteurs', 'auteur', ['terms' => $auteurs]); ?>
         </div>
 
         <!-- name == format -->
@@ -190,6 +194,21 @@ if (isset($_GET['support'])) {
     endif;
 }
 
+// Ajout du contenu AUTEUR aux arguments de la QUERY
+
+if (isset($_GET['auteur'])) {
+    if (!empty($_GET['auteur'])) : ?>
+
+    <?php
+        $fargs['tax_query'][] = [
+            'taxonomy' => 'auteurs',
+            'field' => 'slug',
+            'terms' => array(sanitize_text_field($_GET['auteur'])),
+        ];
+
+    endif;
+}
+
 // Ajout du contenu THEMATIQUE aux arguments de la QUERY
 
 if (isset($_GET['thematique'])) {
@@ -220,7 +239,8 @@ if ($is_searched) :
     // test des posts resultats
 ?>
     <!-- <pre> -->
-    <?php //print_r($query); 
+    <?php 
+    // print_r($query); 
     ?>
     <!-- </pre> -->
     <?php
@@ -231,26 +251,20 @@ if ($is_searched) :
 
             <!-- la boucle -->
 
-            <?php while ($query->have_posts()) : $query->the_post();
+            <?php while ($query->have_posts()) : $query->the_post(); ?>
+                
+                <!-- custom card as elementor fme2021-carte-paysage- -->
+                <?php 
+                    // get_template_part(CS_DIR . '/parts/card-search-result', 'support', ['terms' => $supports]); 
+                ?>
+                <?php 
+                    $authors_list= get_the_terms($post->ID, 'auteurs'); 
+                    $authors_string = join(', ', wp_list_pluck($authors_list, 'name'));
+                ?>
+                
+                <?php
+                get_template_part(CS_DIR . '/parts/card-search-result', '', ['post-auteur' => $authors_string]); ?>
 
-                // if (((isset($_GET['format'])) && (has_post_format([$_GET['format']]))) ||
-                //     ((isset($_GET['format'])) && ($_GET['format'] == '')) && (get_post_format() == '')
-                // ) : 
-            ?>
-
-                <div class="col-sm-4">
-
-                    <div class="card">
-                        <?php the_post_thumbnail('medium', ['class' => 'card-img-top', 'alt' => '', 'style' => 'height:auto']) ?>
-                        <div class="card-body">
-                            <h5 class="card-title"><?php the_title() ?></h5>
-                            <h6 class="card-subtitle mb-2 text-muted"><?php the_author() ?> - <?php the_category() ?></h6>
-
-                            <p class="card-text"><?php the_excerpt('En voir plus') ?></p>
-                            <a href="<?php the_permalink(); ?>" class="card-link">Voir plus</a>
-                        </div>
-                    </div>
-                </div>
                 <?php //endif 
                 ?>
             <?php endwhile;
