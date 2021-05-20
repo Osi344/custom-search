@@ -1,14 +1,14 @@
 <style>
-    @font-face {
-        font-family: addon-saira;
-        src: url(./font/Saira.ttf);
-    }
-
+    
     @font-face {
         font-family: addon-lato;
-        src: url(./font/Lato.ttf);
+        src: url(https://localhost/my-fmes/wp-content/themes/govpress-child-v2/font/Lato.ttf); 
     }
-
+    @font-face {
+        font-family: addon-saira;
+        src: url(https://localhost/my-fmes/wp-content/themes/govpress-child-v2/font/Saira-Light.ttf);
+}
+    
     :root {
         --color-first: #6ec1e4;
         --color-title: #54595f;
@@ -43,8 +43,9 @@
         max-height: 150px;
     }
 
-    .addon-inside{
-        width: 800px; /* proportionnel au nb col bootstrap */
+    .addon-inside {
+        width: 800px;
+        /* proportionnel au nb col bootstrap */
         margin: 10px 10px 10px 20px !important;
         padding: 10px 10px 10px 30px;
         border-left: 2px solid var(--color-first);
@@ -60,20 +61,18 @@
     }
 
     .addon-icon {
+        font-family: addon-saira !important;
         display: inline-flex;
         align-items: center;
-        
+        margin-right: 20px;
     }
+
     #content a {
-        font-family: addon-saira !important;
         color: var(--color-sub) !important;
-        /* color:  #7A7A7A !important; */
     }
 
     #content h3 a {
-        font-family: addon-lato !important;
         color: var(--color-title) !important;
-        /* color:  #54595F !important; */
     }
 
     i {
@@ -82,12 +81,32 @@
     }
 </style>
 
+<?php
+    // Construction  d'elements
+
+    $out = array();
+    if (!empty($args['authors_list'])) {
+        // $out[]= "<ul>";
+        foreach ($args['authors_list'] as $term) {
+            $out[] = sprintf(
+                '<a href="%1$s">%2$s</a>',
+                esc_url(get_term_link($term->slug, 'auteurs')),
+                esc_html($term->name)
+            );
+        }
+        // $out[] = "</ul>\n";
+    }
+    $element_auteur= implode( ',', $out );
+
+    $element_date = sprintf(
+        '<a href="%1$s">%2$s</a>',
+        esc_url(site_url().'/'.get_the_date( 'Y/m/d')),
+        esc_html(get_the_date('j F Y'))
+    );
+?>
+
 <div class="col-12">
-    <!-- <pre> -->
-        <?php 
-        // print_r($post_auteur); 
-        ?>
-    <!-- </pre> -->
+    
     <div class="addon-container">
 
         <div class="">
@@ -109,15 +128,13 @@
             <h4>
                 <span class="addon-icon">
                     <i class="fas fa-pen-nib"></i>
-                    <?= $args['post-auteur'] ?>
+                    <?= $element_auteur ?>
                 </span>
                 <span class="addon-icon">
                     <i class="far fa-calendar-alt"></i>
-                    <?php the_date('j F Y') ?>
+                    <?= $element_date ?>
                 </span>
             </h4>
-            <!-- <h6 class="addon-author"><?php the_author() ?> - </h6> -->
-
         </div>
     </div>
 </div>

@@ -89,23 +89,23 @@ $formats = array(
 
         <div class="osi-group">
             <!-- name == date  !!! format splité ou tableau-->
-            <?php get_template_part(CS_DIR . '/parts/form-date', 'date', []); ?>
+            <?php get_template_part(CS_DIR . '/parts/form', 'date', []); ?>
 
             <!-- name == langue -->
-            <?php get_template_part(CS_DIR . '/parts/form-langue', 'langue', ['terms' => $langues]); ?>
+            <?php get_template_part(CS_DIR . '/parts/form', 'langue', ['terms' => $langues]); ?>
 
             <!-- name == support -->
-            <?php get_template_part(CS_DIR . '/parts/form-support', 'support', ['terms' => $supports]); ?>
+            <?php get_template_part(CS_DIR . '/parts/form', 'support', ['terms' => $supports]); ?>
 
             <!-- name == auteur -->
-            <?php get_template_part(CS_DIR . '/parts/form-auteurs', 'auteur', ['terms' => $auteurs]); ?>
+            <?php get_template_part(CS_DIR . '/parts/form', 'auteurs', ['terms' => $auteurs]); ?>
         </div>
 
         <!-- name == format -->
         <?php //get_template_part(CS_DIR .'/parts/form-format','format', ['terms'=> $formats]); 
         ?>
 
-        <?php get_template_part(CS_DIR . '/parts/form-thematique', 'thematique', ['terms' =>  $thematiques]); ?>
+        <?php get_template_part(CS_DIR . '/parts/form', 'thematique', ['terms' =>  $thematiques]); ?>
 
         <a href="<?= home_url('/fmes2021-page-recherche') ?>">Réinitialiser la recherche</a>
         <br>
@@ -255,18 +255,13 @@ if ($is_searched) :
                 
                 <!-- custom card as elementor fme2021-carte-paysage- -->
                 <?php 
-                    // get_template_part(CS_DIR . '/parts/card-search-result', 'support', ['terms' => $supports]); 
-                ?>
-                <?php 
                     $authors_list= get_the_terms($post->ID, 'auteurs'); 
-                    $authors_string = join(', ', wp_list_pluck($authors_list, 'name'));
                 ?>
                 
                 <?php
-                get_template_part(CS_DIR . '/parts/card-search-result', '', ['post-auteur' => $authors_string]); ?>
-
-                <?php //endif 
+                    get_template_part(CS_DIR . '/parts/card', 'search-result', ['authors_list' => $authors_list]); 
                 ?>
+
             <?php endwhile;
 
             wp_reset_postdata(); ?>
