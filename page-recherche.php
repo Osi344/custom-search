@@ -29,27 +29,60 @@ $is_searched = count($_GET);
 $supports = cs_get_terms('support', 0);
 $langues = cs_get_terms('langue', 0);
 $auteurs = cs_get_terms('auteurs', 0);
-$thematiques_parent = cs_get_terms('thematique', 0);
+// $terms_parent = cs_get_terms('thematique', 0);
+$terms_parent = cs_get_terms('category', 0);
 
-// +++++
 
-$thematiques = [];
-foreach ($thematiques_parent as $tp) :
 
-    if ($tp->parent == 0) :
-        $thematiques[$tp->term_id] = new TermChild($tp);
-        $cs_childs_ids = get_term_children($tp->term_id, 'thematique');
-        if (count($cs_childs_ids)) :
-            
-            foreach ($cs_childs_ids as $cs_child_id) :
+function test_get_childs ($all,$tax){
+
+    $result= [];
+    foreach ($all as $tp) :
+
+    endforeach;
+}
+
+function get_childs($all,$tax){
+
+    // $result= [];
+    foreach ($all as $tp) :
+
+        if ($tp->parent == 0) :
+            $result[$tp->term_id] = new TermChild($tp);
+            $cs_childs_ids = get_term_children($tp->term_id, $tax);
+    
+
+            if (count($cs_childs_ids)) :
                 
-                $cs_childs= get_term_by('term_id', $cs_child_id, 'thematique');
-                $thematiques[$cs_childs->parent]->addChild($cs_childs);
-            endforeach;
-        endif;
-    endif;
-endforeach;
+                var_dump($tp->term_id);
+                ?>
+                <!-- <pre> -->
+                <?php //print_r($cs_childs_ids); ?>
+                <!-- </pre> -->
+                <?php
 
+                $count= 0;
+                foreach ($cs_childs_ids as $cs_child_id) :
+                    $cs_childs= get_term_by('term_id', $cs_child_id, $tax);
+
+                    // test si l'objet parent existe et limite au 2nd degré de catégorie
+                    if ($result[$cs_childs->parent]) {
+                        $result[$cs_childs->parent]->addChild($cs_childs);
+                    }
+ 
+                endforeach;
+            endif;
+        endif;
+    endforeach;
+    return $result;
+}
+
+$fmes2021_terms = get_childs($terms_parent, 'category');
+?>
+<!-- <pre> -->
+    <?php //print_r($fmes2021_terms) ?>
+<!-- </pre> -->
+<?php
 
 
 // Recuperation des post_formats
@@ -105,7 +138,8 @@ $formats = array(
         <?php //get_template_part(CS_DIR .'/parts/form-format','format', ['terms'=> $formats]); 
         ?>
 
-        <?php get_template_part(CS_DIR . '/parts/form', 'thematique', ['terms' =>  $thematiques]); ?>
+        <?php //get_template_part(CS_DIR . '/parts/form', 'thematique', ['terms' =>  $thematiques]); ?>
+        <?php get_template_part(CS_DIR . '/parts/form', 'category', ['terms' =>  $fmes2021_terms]); ?>
 
         <a href="<?= home_url('/fmes2021-page-recherche') ?>">Réinitialiser la recherche</a>
         <br>

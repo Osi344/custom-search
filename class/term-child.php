@@ -10,7 +10,7 @@ class TermChild
         $this->id = $tm->term_id;
         $this->name = $tm->name;
         $this->slug = $tm->slug;
-        $this->childs = [];
+        // $this->childs = [];
     }
 
     public function addChild($tm)
