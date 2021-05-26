@@ -32,18 +32,22 @@
 <script>
     $(document).ready(function () {
 
-        let list = document.querySelectorAll('.form-cat-parent');
+        // let list = document.querySelectorAll('.form-cat-parent');
+        let list = document.querySelectorAll('.form-cat-element');
         
         for(let element of list) {
             element.addEventListener('click', function(ev) {
                 
                 // display child cat
-                let myClass= element.firstElementChild.name;
-                let myTarget= 'div.form-cat-right.' + myClass;
-                $(myTarget).toggle();
+                if ($(element).hasClass('form-cat-parent')) {
+                    let myClass= element.firstElementChild.name;
+                    let myTarget= 'div.form-cat-right.' + myClass;
+                    $(myTarget).toggle();
+                }
 
                 // checkbox toggle state
                 let elementCheckbox= element.firstElementChild;
+                console.log('elementCheckbox: ', elementCheckbox);
                 if ( elementCheckbox.checked === true ) {
                     console.log('checkbox changed to no');
                     elementCheckbox.checked = false;
@@ -52,8 +56,12 @@
                     elementCheckbox.checked = true; 
                 }
 
+                // decocher toutes les sous cat qd cat decochée
             }, false);
         }
+
+
+
     });
 
 </script>
