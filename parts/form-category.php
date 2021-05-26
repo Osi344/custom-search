@@ -1,42 +1,59 @@
 
-<?php
-// initialisation
-$child_array= array();
-?>
 <div class="form-group">
     <label for="select-thematique">Sélectionner la catégorie</label>
-    <div class="form-cat-container">
+    <div class="row">
+        <div class="form-cat-container col-6">
+            <?php foreach ($args['terms'] as $tte) : ?>
+                <div class="form-cat-element form-cat-parent">
+                    <input type="checkbox" name="<?= $tte->slug ?>" class="dot">
+                    <label for="<?= $tte->slug ?>" class="form-cat-lab-parent" data="0"><?= $tte->name ?></label>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="form-cat-container col-6">
         <?php foreach ($args['terms'] as $tte) : ?>
-            <div class="form-cat-element">
-                <input type="checkbox" name="<?= $tte->slug ?>" class="dot">
-                <!-- <span class="dot" data="0"></span> -->
-                <label for="<?= $tte->slug ?>" class="form-cat-lab-parent" data="0"><?= $tte->name ?></label>
-                <?php 
-                    if (count($tte->childs) != 0) : 
-                        // 1er niveau cat parente
-                        // $child_array[]= $tte->slug;
-                        $child_array[$tte->slug]= array();
-                ?>
-                    <div>
-                        <?php foreach ($tte->childs as $child) : 
-                            $child_array[$tte->slug][]= $child->name;
-                        ?>
-                            <!-- <input type="checkbox" name="<?php //echo $child->name ?>" class="dot">
-                            <span class="dot"></span>
-                            <label for="<?php // echo $child->name ?>" class="lab-child"><?php //echo $child->name ?></label> -->
-                        <?php endforeach; ?>
+                <?php if (count($tte->childs) != 0) : ?>
+                    <div class="form-cat-right <?= $tte->slug ?> under">
+                        
+                    <?php foreach ($tte->childs as $child) : ?>
+                        <div class="form-cat-element">
+                            <input type="checkbox" name="<?= $child->slug ?>" class="dot">
+                            <label for="<?= $child->slug ?>" class="form-cat-lab-parent" data="0"><?= $child->name ?></label>
+                        </div>
+                    <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-            </div>
-            <!-- </div> -->
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+           
+        </div>
     </div>
-    <pre>
-        <?php print_r($child_array); ?>
-    </pre>
 </div>
 
-<!-- 1 faire un tableau d'éléments lors de la première boucle
-     0 test en sortie de boucle si présence
-     0 remplir la div de droite des sous cat
-     0 activer tout ca avec du js -->
+<script>
+    $(document).ready(function () {
+
+        let list = document.querySelectorAll('.form-cat-parent');
+        
+        for(let element of list) {
+            element.addEventListener('click', function(ev) {
+                
+                // display child cat
+                let myClass= element.firstElementChild.name;
+                let myTarget= 'div.form-cat-right.' + myClass;
+                $(myTarget).toggle();
+
+                // checkbox toggle state
+                let elementCheckbox= element.firstElementChild;
+                if ( elementCheckbox.checked === true ) {
+                    console.log('checkbox changed to no');
+                    elementCheckbox.checked = false;
+                } else {
+                    console.log('checkbox changed to yes');
+                    elementCheckbox.checked = true; 
+                }
+
+            }, false);
+        }
+    });
+
+</script>
