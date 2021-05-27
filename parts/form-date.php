@@ -7,7 +7,7 @@ function frenchMonthLiteral($i){
 
 <div class="form-group"> 
     <!-- <label for="">Date</label> -->
-    <ul class="osi-date-ul">
+    <ul class="form-date-ul">
         <li class="list-group-item">
             <label for="select-day">Jour</label>
             <select class="form-control" id="select-day" name="day">

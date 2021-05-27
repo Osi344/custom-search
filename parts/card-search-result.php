@@ -1,92 +1,8 @@
-<style>
-    
-    @font-face {
-        font-family: addon-lato;
-        src: url(https://localhost/my-fmes/wp-content/themes/govpress-child-v2/font/Lato.ttf); 
-    }
-    @font-face {
-        font-family: addon-saira;
-        src: url(https://localhost/my-fmes/wp-content/themes/govpress-child-v2/font/Saira-Light.ttf);
-}
-    
-    :root {
-        --color-first: #6ec1e4;
-        --color-title: #54595f;
-        --color-sub: #7a7a7a;
-        --color-reflexion: #00479B;
-        --color-formation: #FABB11;
-        --color-appui: #D13246;
-        --color-institut: #14B2BA;
-    }
-
-    ul {
-        list-style: none;
-    }
-
-    div.addon-container {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        height: 170px;
-        margin: 10px 10px;
-        padding: 10px 10px !important;
-        border: 1px solid var(--color-title) !important;
-        border-radius: 10px;
-        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
-    }
-
-    .addon-image {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 150px;
-        max-height: 150px;
-    }
-
-    .addon-inside {
-        width: 800px;
-        /* proportionnel au nb col bootstrap */
-        margin: 10px 10px 10px 20px !important;
-        padding: 10px 10px 10px 30px;
-        border-left: 2px solid var(--color-first);
-    }
-
-    h3.addon-title {
-        font-family: addon-lato;
-        font-size: 18px !important;
-    }
-
-    h3.addon-title a {
-        color: var(--color-title) !important;
-    }
-
-    .addon-icon {
-        font-family: addon-saira !important;
-        display: inline-flex;
-        align-items: center;
-        margin-right: 20px;
-    }
-
-    #content a {
-        color: var(--color-sub) !important;
-    }
-
-    #content h3 a {
-        color: var(--color-title) !important;
-    }
-
-    i {
-        color: var(--color-first);
-        margin-right: 14px;
-    }
-</style>
-
 <?php
     // Construction  d'elements
 
     $out = array();
     if (!empty($args['authors_list'])) {
-        // $out[]= "<ul>";
         foreach ($args['authors_list'] as $term) {
             $out[] = sprintf(
                 '<a href="%1$s">%2$s</a>',
@@ -94,7 +10,6 @@
                 esc_html($term->name)
             );
         }
-        // $out[] = "</ul>\n";
     }
     $element_auteur= implode( ',', $out );
 
@@ -110,14 +25,23 @@
     <div class="addon-container">
 
         <div class="">
-            <?php the_post_thumbnail('medium', ['class' => 'addon-image', 'alt' => '', 'style' => 'height:auto']) ?>
+            <?php //the_post_thumbnail('medium', ['class' => 'addon-image', 'alt' => '', 'style' => 'height:auto']) ?>
+            <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
+                <?php 
+                if ( has_post_thumbnail() ) :
+                    the_post_thumbnail('medium', ['class' => 'addon-image', 'alt' => '', 'style' => 'height:auto']);
+                else :
+                    echo '<img src="https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-300x169.jpg" class="addon-image wp-post-image" alt="" loading="lazy" style="height:auto" srcset="https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-300x169.jpg 300w, https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-e1608221919938-600x338.jpg 600w, https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-1024x576.jpg 1024w, https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-768x432.jpg 768w, https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-500x281.jpg 500w, https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-800x450.jpg 800w, https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-1280x720.jpg 1280w, https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-1536x864.jpg 1536w, https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-1320x743.jpg 1320w, https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-400x225.jpg 400w, https://localhost/my-fmes/wp-content/uploads/2020/11/boussole-strategique-jpeg-1-e1608221919938.jpg 640w" sizes="(max-width: 300px) 100vw, 300px" width="300" height="169">';
+                endif; 
+                ?>
+            </a>
         </div>
 
         <div class="addon-inside">
             <h4>
                 <span class="addon-icon">
                     <i class="fas fa-tags"></i>
-                    <?php the_category(", ") ?>
+                    <?php the_category('&nbsp|&nbsp') ?>
                 </span>
             </h4>
             <br>
@@ -126,10 +50,12 @@
             </h3>
             <br>
             <h4>
-                <span class="addon-icon">
-                    <i class="fas fa-pen-nib"></i>
-                    <?= $element_auteur ?>
-                </span>
+                <?php if ($element_auteur != "") :?>
+                    <span class="addon-icon">
+                        <i class="fas fa-pen-nib"></i>
+                        <?= $element_auteur ?>
+                    </span>
+                <?php endif ?>
                 <span class="addon-icon">
                     <i class="far fa-calendar-alt"></i>
                     <?= $element_date ?>

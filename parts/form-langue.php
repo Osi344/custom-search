@@ -1,5 +1,5 @@
 <div class="form-group">
-    <ul class="osi-date-ul">
+    <ul class="form-date-ul">
         <li class="list-group-item">
             <label for="select-langue">Langue</label>
             <select class="form-control" id="select-langue" name="langue">

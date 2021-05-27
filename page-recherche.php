@@ -31,14 +31,15 @@ $langues = cs_get_terms('langue', 0);
 $auteurs = cs_get_terms('auteurs', 0);
 $terms_parent = cs_get_terms('category', 0);
 
-
-
-function test_get_childs ($all,$tax){
-
-    $result= [];
-    foreach ($all as $tp) :
-
-    endforeach;
+function wporg_recursive_sanitize_text_field( $array ) {
+    foreach ( $array as $key => &$value ) {
+        if ( is_array( $value ) ) {
+            $value = wporg_recursive_sanitize_text_field( $value );
+        } else {
+            $value = sanitize_text_field( $value );
+        }
+    }
+    return $array;
 }
 
 function get_childs($all,$tax){
@@ -112,7 +113,7 @@ $formats = array(
             <input type="search" class="form-control" id="champ-recherche" name="champ-recherche" value="<?= isset($_GET['champ-recherche']) ? $_GET['champ-recherche'] : '' ?>" placeholder="champ de recherche">
         </div>
 
-        <div class="osi-group">
+        <div class="form-recherche-group">
             <!-- name == date  !!! format splité ou tableau-->
             <?php get_template_part(CS_DIR . '/parts/form', 'date', []); ?>
 
@@ -144,12 +145,15 @@ $formats = array(
 
 
 <?php
+// initialisation pagination
+$paged= (get_query_var('paged')) ? get_query_var('paged') : 1;
 
 // initialisation tableau d'arguments de la QUERY
 
 $fargs = [
+    'paged' => $paged,
     'post_type' => 'post',
-    'posts_per_page' => 0,
+    'posts_per_page' => 6,
     'tax_query' => [
         // 'relation' => 'AND'
     ],
@@ -236,22 +240,6 @@ if (isset($_GET['auteur'])) {
 ?>
 
 <?php
-// Ajout du contenu THEMATIQUE aux arguments de la QUERY
-
-// if (isset($_GET['thematique'])) {
-//     if (!empty($_GET['thematique'])) :
-  
-//         $fargs['tax_query'][] = [
-//             'taxonomy' => 'thematique',
-//             'field' => 'slug',
-//             'terms' => $_GET['thematique'], // deja du type tableau
-//         ];
-
-//     endif;
-// }
-?>
-
-<?php
 // Ajout du contenu CATEGORY aux arguments de la QUERY
 
 if (isset($_GET['category'])) {
@@ -260,7 +248,9 @@ if (isset($_GET['category'])) {
         $fargs['tax_query'][] = [
             'taxonomy' => 'category',
             'field' => 'slug',
-            'terms' => $_GET['category'], // deja du type tableau
+            // 'terms' => $_GET['category'], // deja du type tableau
+            // 'terms' => array(sanitize_text_field($_GET['category'])),
+            'terms' => wporg_recursive_sanitize_text_field($_GET['category']),
         ];
 
     endif;
@@ -308,7 +298,26 @@ if ($is_searched) :
 
             wp_reset_postdata(); ?>
         </div>
-        // fonction pagination
+        <div class="pagination">
+            <?php 
+                echo paginate_links( array(
+                    'base'         => str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) ),
+                    'total'        => $query->max_num_pages,
+                    'current'      => max( 1, get_query_var( 'paged' ) ),
+                    'format'       => '?paged=%#%',
+                    'show_all'     => false,
+                    'type'         => 'list',
+                    'end_size'     => 0,
+                    'mid_size'     => 1,
+                    'prev_next'    => true,
+                    'prev_text'    => sprintf( '<i class="fas fa-circle-left"></i> %1$s', __( 'Précédent', 'text-domain' ) ),
+                    'next_text'    => sprintf( '%1$s <i class="fas fa-circle-right">', __( 'Suivant', 'text-domain' ) ),
+                    'add_args'     => false,
+                    'add_fragment' => '',
+                ) );
+            ?>
+        </div>
+
     <?php else :
     ?>
         <div class="clearfix mb-3"></div>

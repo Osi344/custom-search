@@ -37,7 +37,7 @@ function test_array($toTest,$myArray){
                 // childs => associated elements 
                 if (count($tte->childs) != 0) :
 
-                    // for-cat-right element visible or not
+                    // form-cat-right element visible or not
                     $catRight = '<div class="form-cat-right ' . $tte->slug . '" style="';
                     if (test_array($tte->slug, $current)) {
                         $catRight .= 'display:block">';
