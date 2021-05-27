@@ -29,7 +29,6 @@ $is_searched = count($_GET);
 $supports = cs_get_terms('support', 0);
 $langues = cs_get_terms('langue', 0);
 $auteurs = cs_get_terms('auteurs', 0);
-// $terms_parent = cs_get_terms('thematique', 0);
 $terms_parent = cs_get_terms('category', 0);
 
 
@@ -53,13 +52,6 @@ function get_childs($all,$tax){
     
 
             if (count($cs_childs_ids)) :
-                
-                var_dump($tp->term_id);
-                ?>
-                <!-- <pre> -->
-                <?php //print_r($cs_childs_ids); ?>
-                <!-- </pre> -->
-                <?php
 
                 $count= 0;
                 foreach ($cs_childs_ids as $cs_child_id) :
@@ -138,7 +130,6 @@ $formats = array(
         <?php //get_template_part(CS_DIR .'/parts/form-format','format', ['terms'=> $formats]); 
         ?>
 
-        <?php //get_template_part(CS_DIR . '/parts/form', 'thematique', ['terms' =>  $thematiques]); ?>
         <?php get_template_part(CS_DIR . '/parts/form', 'category', ['terms' =>  $fmes2021_terms]); ?>
 
         <a href="<?= home_url('/fmes2021-page-recherche') ?>">Réinitialiser la recherche</a>
@@ -242,17 +233,34 @@ if (isset($_GET['auteur'])) {
 
     endif;
 }
+?>
 
+<?php
 // Ajout du contenu THEMATIQUE aux arguments de la QUERY
 
-if (isset($_GET['thematique'])) {
-    if (!empty($_GET['thematique'])) :
-    ?>
+// if (isset($_GET['thematique'])) {
+//     if (!empty($_GET['thematique'])) :
+  
+//         $fargs['tax_query'][] = [
+//             'taxonomy' => 'thematique',
+//             'field' => 'slug',
+//             'terms' => $_GET['thematique'], // deja du type tableau
+//         ];
+
+//     endif;
+// }
+?>
+
 <?php
+// Ajout du contenu CATEGORY aux arguments de la QUERY
+
+if (isset($_GET['category'])) {
+    if (!empty($_GET['category'])) :
+    
         $fargs['tax_query'][] = [
-            'taxonomy' => 'thematique',
+            'taxonomy' => 'category',
             'field' => 'slug',
-            'terms' => $_GET['thematique'], // deja du type tableau
+            'terms' => $_GET['category'], // deja du type tableau
         ];
 
     endif;
@@ -274,7 +282,7 @@ if ($is_searched) :
 ?>
     <!-- <pre> -->
     <?php 
-    // print_r($query); 
+        //print_r($query); 
     ?>
     <!-- </pre> -->
     <?php
