@@ -1090,13 +1090,15 @@ p, .entry-content li {
 
 
 .form-recherche-group {
-	display: inline-flex;
+	/* display: inline-flex; */
+	display: inline-block;
 	justify-content: space-around;
 	margin: auto;
 }
 
 .form-date-ul{
 	display: inline-flex;
+	/* display: inline-block */
 	
 }
 
@@ -1236,7 +1238,35 @@ li span.page-numbers {
 	background-color: var(--color-first) !important;
 } */
 
-#content a:hover {
+#page-recherche .form-group {
+	margin-bottom: -10px;
+}
+
+#page-recherche #content a:hover {
 	background-color: var(--color-first) !important;
 	color: white !important;
+}
+
+#form-recherche {
+	display: flex;
+	justify-content: center;
+}
+
+@media screen and (max-width: 767px){
+
+	.form-date-ul label {
+		font-size: 15px;
+	}
+
+	.form-cat-element label {
+		font-size: 14px
+	}
+
+	h3.addon-title {
+		font-size: 16px !important;
+	}
+
+	div.addon-container {
+		height: 260px;
+	}
 }

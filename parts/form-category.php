@@ -11,12 +11,12 @@ function test_array($toTest,$myArray){
 }
 ?>
 
-<div class="form-group">
+<div class="form-group col-12">
     <label for="select-thematique">Sélectionner la catégorie</label>
     <?php $current = is_array($_GET['category']) ? $_GET['category'] : array(); ?>
 
     <div class="row">
-        <div class="form-cat-container col-6">
+        <div class="form-cat-container col-12 col-md-6">
             <?php foreach ($args['terms'] as $tte) : ?>
                 <div class="form-cat-element form-cat-parent">
                     <?php
@@ -30,7 +30,7 @@ function test_array($toTest,$myArray){
                 </div>
             <?php endforeach; ?>
         </div>
-        <div class="form-cat-container col-6">
+        <div class="form-cat-container col-12 col-md-6">
                     
             <?php foreach ($args['terms'] as $tte) :
 

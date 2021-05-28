@@ -22,9 +22,9 @@
 
 <div class="col-12">
     
-    <div class="addon-container">
+    <div class="addon-container row">
 
-        <div class="">
+        <div class="col-12 col-md-3">
             <?php //the_post_thumbnail('medium', ['class' => 'addon-image', 'alt' => '', 'style' => 'height:auto']) ?>
             <a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
                 <?php 
@@ -37,7 +37,7 @@
             </a>
         </div>
 
-        <div class="addon-inside">
+        <div class="addon-inside col-12 col-md-8">
             <h4>
                 <span class="addon-icon">
                     <i class="fas fa-tags"></i>
