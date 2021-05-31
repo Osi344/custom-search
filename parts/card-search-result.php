@@ -11,7 +11,7 @@
             );
         }
     }
-    $element_auteur= implode( ',', $out );
+    $element_auteur= implode( '&nbsp|&nbsp', $out );
 
     $element_date = sprintf(
         '<a href="%1$s">%2$s</a>',

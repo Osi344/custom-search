@@ -43,7 +43,7 @@ if ($is_searched) {
             <input type="search" class="form-control" id="champ-recherche" name="champ-recherche" value="<?= isset($_GET['champ-recherche']) ? $_GET['champ-recherche'] : '' ?>" placeholder="champ de recherche">
         </div>
 
-        <!-- name == date  !!! format splité ou tableau-->
+        <!-- name == date -->
         <?php get_template_part(CS_DIR . '/parts/form', 'date', []); ?>
 
         <div class="form-recherche-group col-12">
