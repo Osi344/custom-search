@@ -138,28 +138,9 @@ function fmes2021_registrer_assets()
 }
 add_action('wp_enqueue_scripts', 'fmes2021_registrer_assets', 10);
 
-add_action('rest_api_init', function () {
-
-    register_rest_route('osi/', '/post/(?P<id>\d+)', [
-        'methods' => 'GET',
-        'callback' => function (WP_REST_Request $request) {
-            $postID = (int)$request->get_param('id');
-            $post = get_post($postID);
-            if ($post === null) {
-                return new WP_Error('Rien', 'On a rien à dire', ['status' => 404]);
-            }
-            // return $post->post_title;
-            return $post;
-        },
-        // 'permission_callback' => function(){
-        //     return current_user_can('edit_posts');
-        // },
-    ]);
-});
-
-add_action('wp_enqueue_scripts', function () {
-    wp_enqueue_style('govpress-child-v2', get_stylesheet_uri());
-});
+// add_action('wp_enqueue_scripts', function () {
+//     wp_enqueue_style('govpress-child-v2', get_stylesheet_uri());
+// });
 
 // add_action('after_setup_theme', function(){
 //     add_theme_support( 'post-formats', array( 'aside', 'image', 'video', 'quote', 'link','audio' ) );

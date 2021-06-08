@@ -13,9 +13,13 @@ function test_array($toTest, $myArray)
 ?>
 
 <div id="form-cat" class="form-group col-12">
-    <label for="select-thematique">Sélectionner la catégorie</label>
-    <?php $current = is_array($_GET['category']) ? $_GET['category'] : array(); ?>
-
+    <label for="select-category">Sélectionner la catégorie</label>
+    <?php 
+    $current= array();
+        if (isset($_GET['category'])) :
+            $current = is_array($_GET['category']) ? $_GET['category'] : array();
+        endif;
+    ?>
     <div class="row">
         <div class="form-cat-container col-12">
             <div class="row  row-no-gutters">
@@ -23,6 +27,7 @@ function test_array($toTest, $myArray)
                     <div class="form-cat-element form-cat-parent col-12 col-lg-4 col-md-6">
                         <?php
                         echo '<input type="checkbox" name="category[]" '
+                            . 'id="' . $tte->slug . '" '
                             . 'value="' . $tte->slug . '" class="dot"'
                             . checked(in_array($tte->slug, $current), true, false) . '> ';
 
@@ -38,7 +43,7 @@ function test_array($toTest, $myArray)
                 <?php foreach ($args['terms'] as $tte) :
 
                     // childs => associated elements 
-                    if (count($tte->childs) != 0) :
+                    if ((isset($tte->childs)) && (count($tte->childs) != 0)) :
 
                         $catRight = '<div class="form-cat-right ' . $tte->slug . ' col-12 col-lg-4 col-md-6" style="';
                         if (test_array($tte->slug, $current)) {
@@ -53,6 +58,7 @@ function test_array($toTest, $myArray)
 
                                 <?php
                                 echo '<input type="checkbox" name="category[]" '
+                                    . 'id="' . $child->slug . '" '
                                     . 'value="' . $child->slug . '" class="dot"'
                                     . checked(in_array($child->slug, $current), true, false) . '> ';
                                 echo '<label for="' . $child->slug . '" class="form-cat-lab-parent" data="0">' . $child->name  . '</label>';
@@ -69,11 +75,10 @@ function test_array($toTest, $myArray)
 </div>
 
 <script>
-    $(document).ready(function() {
+    // $(document).ready(function() {
+    jQuery ( function( $ ) {
 
         function toggleBg(elt) {
-            let test = $(elt).css('background-color');
-            console.log("element bg color: ", test);
             if ($(elt).css('background-color') == "rgba(0, 0, 0, 0)") {
                 $(elt).css('background-color', "rgba(110, 193, 228, 0.5");
             } else {
@@ -81,37 +86,21 @@ function test_array($toTest, $myArray)
             }
         }
 
-        // let list = document.querySelectorAll('.form-cat-parent');
-        let list = document.querySelectorAll('.form-cat-element');
+        $('input.dot').change(function(){
 
-        for (let element of list) {
+            // the parent
+            let directParent= this.parentElement;
 
-            console.log('element: ', element);
+            // active background
+            toggleBg(directParent);
 
-            element.addEventListener('click', function(ev) {
-
-                // display child cat
-                if ($(element).hasClass('form-cat-parent')) {
-                    let myClass = element.firstElementChild.value;
-                    let myTarget = 'div.form-cat-right.' + myClass;
-                    $(myTarget).toggle();
-
-                    toggleBg(element);
-                }
-
-                // checkbox toggle state
-                let elementCheckbox = element.firstElementChild;
-                if (elementCheckbox.checked === true) {
-                    elementCheckbox.checked = false;
-                } else {
-                    elementCheckbox.checked = true;
-                }
-
-                // decocher toutes les sous cat qd cat decochée
-            }, false);
-        }
-
-
+            // toggle sous cat
+            if ($(directParent).hasClass('form-cat-parent')) {
+                let myClass = directParent.firstElementChild.value;
+                let myTarget = 'div.form-cat-right.' + myClass;
+                $(myTarget).toggle();   
+            }
+        });
 
     });
 </script>
