@@ -1111,6 +1111,9 @@ p, .entry-content li {
 	margin-top: -5px;
 }
 
+.list-group-item {
+	min-width: 80px;
+}
 
 /* +++++ */
 
@@ -1149,6 +1152,11 @@ div.addon-container {
 h3.addon-title {
 	font-family: addon-lato;
 	font-size: 18px !important;
+	margin-bottom: -5px;
+}
+
+.addon-inside h4{
+	margin-bottom: -10px;
 }
 
 h3.addon-title a {
@@ -1189,26 +1197,45 @@ i {
 	width: 24px;
 }
 
+
 .form-cat-element {
 	display: flex;
 	align-items: center;
-	margin: 5px 5px;
-	width: 100px;
-}
-
-.form-cat-lab-parent {
+	margin: 5px auto;
+	/* width: 100px; */
 	border: 1px solid #ced4da !important;
 	border-radius: .25rem;
 	transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-	position: absolute;
+	max-width: 85% !important;
+}
+
+.form-cat-parent {
+	max-width: 32% !important;
+}
+
+.form-cat-lab-parent {
 	width: 300px;
 	cursor: pointer;
-	padding-left: 50px;
+	padding-left: 20px;
 	margin: 2px 5px;
+	font-size: 14px;
 }
 
 .form-cat-right {
-	margin: 10px 10px;
+	background-color: rgba(110,193,228, 0.2);
+}
+
+.addon-query {
+	font-family: addon-saira !important;
+	font-size: 18px;
+	display: inline-flex;
+	/* align-items: center; */
+	margin-left: 40px;
+	padding: 20px 5px;	
+}
+.addon-query-number {
+	font-weight: 600;
+	color: var(--color-first);
 }
 
 div.pagination{
@@ -1234,12 +1261,12 @@ li span.page-numbers {
 	border: none !important;
 }
 
-/* div.pagination a:hover{
-	background-color: var(--color-first) !important;
-} */
+#page-recherche {
+	margin-bottom: 10px;
+}
 
 #page-recherche .form-group {
-	margin-bottom: -10px;
+	margin-bottom: -20px;
 }
 
 #page-recherche #content a:hover {
@@ -1252,14 +1279,25 @@ li span.page-numbers {
 	justify-content: center;
 }
 
+#form-cat {
+	margin-bottom: 10px !important;
+}
+
+@media screen and (max-width: 992px){
+	.form-cat-element {
+		max-width: 85% !important;
+	}
+	.form-cat-parent {
+		max-width: 48% !important;
+	}
+}
 @media screen and (max-width: 767px){
+	.form-cat-parent {
+		max-width: inherit !important;
+	}
 
 	.form-date-ul label {
 		font-size: 15px;
-	}
-
-	.form-cat-element label {
-		font-size: 14px
 	}
 
 	h3.addon-title {
@@ -1268,5 +1306,9 @@ li span.page-numbers {
 
 	div.addon-container {
 		height: 260px;
+	}
+
+	.addon-image {
+		max-height: 100px;
 	}
 }

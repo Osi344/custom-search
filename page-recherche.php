@@ -86,6 +86,14 @@ if ($is_searched) :
 
         <div class="row">
 
+            <!-- nb_res -->
+            <div class="addon-query">
+                <br>
+                <span class="addon-query-number"><?= $query->found_posts ?></span>
+                &nbsp;résultat<?php if ($query->found_posts>1) : echo 's'; endif; ?> pour votre recherche. 
+                <br>
+            </div>
+
             <!-- la boucle -->
 
             <?php while ($query->have_posts()) : $query->the_post(); ?>
@@ -124,7 +132,8 @@ if ($is_searched) :
         </div>
 
     <?php else : ?>
-        <div class="clearfix mb-3"></div>
-        <div class="alert alert-secondary">Il n'y a pas de résultat</div>
+        <div class="addon-query">
+            Il n'y a pas de résultat pour votre recherche. 
+        </div>
     <?php endif;
 endif; ?>
